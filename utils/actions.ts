@@ -12,14 +12,13 @@ export const createTodo = async (formData: FormData) => {
 }
 
 export const completeTodo = async (id: string) => {
-  prisma.$queryRaw``
+  const todo = await prisma.todo.findUnique({ where: { id } })
   await prisma.todo.update({
-    where: {
-      id,
-    },
+    where: { id },
     data: {
-      completed: true,
+      completed: !todo?.completed,
     },
   })
+
   revalidatePath("/todos")
 }
